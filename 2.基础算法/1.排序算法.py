@@ -4,6 +4,7 @@ import random
 class Sort:
     def __init__(self, arr_num, arr_range):
         self.arr = []
+        # self.arr = [3,87,2,93,78,56,61,38,12,40]
         self.arr_num = arr_num
         self.arr_range = arr_range
         self._create_arr()
@@ -67,18 +68,40 @@ class Sort:
     def partition(self, left, right):
         arr = self.arr
         k = left
-        for i in range(left,right):
-            if arr[i]<arr[right]:
-                arr[k],arr[i] = arr[i],arr[k]
-                k+=1
-        arr[k],arr[right] = arr[right],arr[k]
+        for i in range(left, right):
+            if arr[i] < arr[right]:
+                arr[k], arr[i] = arr[i], arr[k]
+                k += 1
+        arr[k], arr[right] = arr[right], arr[k]
         return k
+
     def quick_sort(self, left, right):
         if left < right:
             pivot = self.partition(left, right)
             self.quick_sort(left, pivot - 1)
             self.quick_sort(pivot + 1, right)
 
+    # 堆排序
+    def adjust(self, node_pos,arr_len):
+        arr = self.arr
+        dad = node_pos
+        son = dad * 2 + 1
+        while son <= arr_len:
+            son = son+1 if son+1<=arr_len and arr[son]<arr[son+1] else son
+            if arr[dad]<arr[son]:
+                arr[dad],arr[son] = arr[son],arr[dad]
+                dad = son
+                son = dad * 2 + 1
+            else:
+                break
+    def heap_sort(self):
+        arr = self.arr
+        arr_len = self.arr_num
+        for node_pos in range((arr_len-1) // 2 - 1, -1, -1):
+            self.adjust(node_pos,arr_len-1)
+        for pos in range(arr_len-1,0,-1):
+            arr[0],arr[pos] = arr[pos],arr[0]
+            self.adjust(0,pos-1)
 
 if __name__ == '__main__':
     s = Sort(10, 100)
@@ -88,4 +111,6 @@ if __name__ == '__main__':
     # s.insert_sort()
     # s.shell_sort()
     # s.quick_sort(0,9)
+    s.heap_sort()
+
     print(s.arr)
