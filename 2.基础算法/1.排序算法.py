@@ -82,26 +82,62 @@ class Sort:
             self.quick_sort(pivot + 1, right)
 
     # 堆排序
-    def adjust(self, node_pos,arr_len):
+    def adjust(self, node_pos, arr_len):
         arr = self.arr
         dad = node_pos
         son = dad * 2 + 1
         while son <= arr_len:
-            son = son+1 if son+1<=arr_len and arr[son]<arr[son+1] else son
-            if arr[dad]<arr[son]:
-                arr[dad],arr[son] = arr[son],arr[dad]
+            son = son + 1 if son + 1 <= arr_len and arr[son] < arr[son + 1] else son
+            if arr[dad] < arr[son]:
+                arr[dad], arr[son] = arr[son], arr[dad]
                 dad = son
                 son = dad * 2 + 1
             else:
                 break
+
     def heap_sort(self):
         arr = self.arr
         arr_len = self.arr_num
-        for node_pos in range((arr_len-1) // 2 - 1, -1, -1):
-            self.adjust(node_pos,arr_len-1)
-        for pos in range(arr_len-1,0,-1):
-            arr[0],arr[pos] = arr[pos],arr[0]
-            self.adjust(0,pos-1)
+        for node_pos in range((arr_len - 1) // 2 - 1, -1, -1):
+            self.adjust(node_pos, arr_len - 1)
+        for pos in range(arr_len - 1, 0, -1):
+            arr[0], arr[pos] = arr[pos], arr[0]
+            self.adjust(0, pos - 1)
+
+    # 归并排序
+    def merge(self, left, mid, right):
+        arr = self.arr
+        arr_b = arr.copy()
+        i = left
+        j = mid + 1
+        k = left
+        while i<=mid and j<=right:
+            if arr[i]< arr[j]:
+                arr_b[k] = arr[i]
+                k+=1
+                i+=1
+            else:
+                arr_b[k] = arr[j]
+                k += 1
+                j += 1
+        while i<=mid:
+            arr_b[k] = arr[i]
+            k += 1
+            i += 1
+        while j<=right:
+            arr_b[k] = arr[j]
+            k += 1
+            j += 1
+        for pos in range(left,right+1):
+            arr[pos] = arr_b[pos]
+
+    def merge_sort(self, left, right):
+        if left < right:
+            mid = (left + right) >> 1
+            self.merge_sort(left, mid)
+            self.merge_sort(mid + 1, right)
+            self.merge(left, mid, right)
+
 
 if __name__ == '__main__':
     s = Sort(10, 100)
@@ -111,6 +147,6 @@ if __name__ == '__main__':
     # s.insert_sort()
     # s.shell_sort()
     # s.quick_sort(0,9)
-    s.heap_sort()
-
+    # s.heap_sort()
+    s.merge_sort(0,9)
     print(s.arr)
