@@ -7,33 +7,26 @@ def threeSum(nums):
     :type nums: List[int]
     :rtype: List[List[int]]
     """
-    di = {}
-    for i in range(len(nums)):
-        if di.get(nums[i]):
-            di[nums[i]].append(i)
-        else:
-            di[nums[i]] = [i]
+    nums.sort()
     ans = []
-    for i in range(len(nums)):
-        di_copy = copy.deepcopy(di)
-        res = [nums[i]]
-        sum = nums[i]
-        di_copy[nums[i]].remove(i)
-        for j in range(len(nums)):
-            if i == j:
-                continue
-
-            res.append(nums[j])
-            sum += nums[j]
-            di_copy[nums[j]].remove(j)
-
-            find = di_copy.get(0 - sum, None)
-            if find is None or len(find) == 0:
-                continue
-            for k in find:
-                res1 = copy.deepcopy(res)
-                res1.append(nums[k])
-                ans.append(res1)
+    for i in range(len(nums) - 2):
+        if i > 0 and nums[i] == nums[i - 1]:
+            continue
+        left = i + 1
+        right = len(nums) - 1
+        while left < right:
+            if (nums[i] + nums[left] + nums[right]) > 0:
+                right -= 1
+            elif (nums[i] + nums[left] + nums[right]) < 0:
+                left += 1
+            else:
+                ans.append([nums[i], nums[left], nums[right]])
+                left += 1
+                while left < right and nums[left] == nums[left - 1]:
+                    left += 1
+                right -= 1
+                while left < right and nums[right] == nums[right + 1]:
+                    right -= 1
     return ans
 
 
